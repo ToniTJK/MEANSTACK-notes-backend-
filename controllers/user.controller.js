@@ -122,32 +122,60 @@ function login(req, res) {
 }
 
 function updateUser(req, res) {
-    var userId = req.params.id;
-    var update = req.body;
+  var userId = req.params.id;
+  var update = req.body;
 
-    if (userId != req.user.sub) {
-        res.status(500).send({mssg: "No tienes permiso para actualizar el usuario."});  
+  if (userId != req.user.sub) {
+    res
+      .status(500)
+      .send({ mssg: "No tienes permiso para actualizar el usuario." });
+  }
+
+  User.findByIdAndUpdate(userId, update, { new: true }, (err, userUpdated) => {
+    if (err) {
+      res.status(500).send({ mssg: "Error al actualizar usuario." });
+    } else {
+      if (userUpdated) {
+        res.status(200).send({
+          mssg: "El usuario ha sido actualizado correctamente.",
+          userUpdated: userUpdated,
+        });
+      } else {
+        res.status(404).send({ mssg: "No se ha podido actualizar el usuario" });
+      }
     }
+  });
+}
 
-    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
-        if (err) {
-            res.status(500).send({mssg: "Error al actualizar usuario."});  
-        } else {
-        if (userUpdated) {
-            res.status(200).send({
-                mssg: "El usuario ha sido actualizado correctamente.",
-                userUpdated: userUpdated
-            });  
-        } else {
-            res.status(404).send({mssg: "No se ha podido actualizar el usuario"});  
-        } 
-        }
-    });
+function deleteUser(req, res) {
+  var userId = req.params.id;
+
+  if (userId != req.user.sub) {
+    res
+      .status(500)
+      .send({ mssg: "No tienes permiso para actualizar el usuario." });
+  }
+
+  User.findByIdAndDelete(userId, (err, userDeleted) => {
+    if (err) {
+      res.status(500).send({ mssg: "Error en la petición." });
+    } else {
+      if (userDeleted) {
+        res.status(500).send({
+          mssg: "Usuario eliminado correctamente.",
+          userDeleted: userDeleted,
+        });
+      } else {
+        res.status(500).send({ mssg: "No se ha podido eliminar el usuario." });
+      }
+    }
+  });
 }
 
 module.exports = {
   pruebas,
   saveUser,
   login,
-  updateUser
+  updateUser,
+  deleteUser,
 };
