@@ -2,6 +2,7 @@
 
 /* Modules */
 var bcrypt = require("bcrypt-nodejs");
+var moment = require('moment');
 
 /* Models */
 var User = require("./../models/user.model");
@@ -31,6 +32,7 @@ function saveUser(req, res) {
   if (params.password && params.name && params.email) {
     user.name = params.name;
     user.email = params.email;
+    user.createdAt = moment().format();
 
     User.findOne({ email: user.email.toLowerCase() }, (err, userRegistred) => {
       if (err) {
