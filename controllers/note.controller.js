@@ -9,22 +9,22 @@ var Note = require("./../models/note.model");
 /* SERVICES */
 
 /* ACTIONS */
-function getNotes(req, res){
+function getNotes(req, res) {
   var userId = req.params.id;
 
-  Note.find({ user: userId}).exec((err, notes) => {
+  Note.find({ user: userId }).exec((err, notes) => {
     if (err) {
       res.status(500).send({ mssg: "Error en la petición." });
     } else {
       if (notes) {
         res.status(500).send({
-          notes: notes
+          notes: notes,
         });
       } else {
         res.status(404).send({ mssg: "No se encuentras notas." });
       }
     }
-  })
+  });
 }
 
 function createNote(req, res) {
@@ -79,20 +79,25 @@ function updateNote(req, res) {
   var noteId = req.params.id;
   var infoToUpdate = req.body;
 
-  Note.findByIdAndUpdate(noteId, infoToUpdate, { new: true }, (err, noteUpdated) => {
-    if (err) {
-      res.status(500).send({ mssg: "Error en la petición." });
-    } else {
-      if (noteUpdated) {
-        res.status(500).send({
-          mssg: "Nota actualizada correctamente.",
-          noteUpdated: noteUpdated,
-        });
+  Note.findByIdAndUpdate(
+    noteId,
+    infoToUpdate,
+    { new: true },
+    (err, noteUpdated) => {
+      if (err) {
+        res.status(500).send({ mssg: "Error en la petición." });
       } else {
-        res.status(500).send({ mssg: "No se ha podido eliminar la nota." });
+        if (noteUpdated) {
+          res.status(500).send({
+            mssg: "Nota actualizada correctamente.",
+            noteUpdated: noteUpdated,
+          });
+        } else {
+          res.status(500).send({ mssg: "No se ha podido eliminar la nota." });
+        }
       }
     }
-  })
+  );
 }
 
 module.exports = {

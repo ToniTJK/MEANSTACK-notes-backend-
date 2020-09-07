@@ -2,7 +2,7 @@
 
 var jwt = require("jwt-simple");
 var moment = require("moment");
-var secret = "clave_secreta_notas_app";
+var secret = process.env.JWT_SECRET;
 
 exports.ensureAuth = function (req, res, next) {
   if (!req.headers.authorization) {

@@ -2,7 +2,7 @@
 
 /* Modules */
 var bcrypt = require("bcrypt-nodejs");
-var moment = require('moment');
+var moment = require("moment");
 
 /* Models */
 var User = require("./../models/user.model");

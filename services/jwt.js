@@ -1,19 +1,18 @@
-'use strict'
+"use strict";
 
-var jwt = require('jwt-simple');
-var moment = require('moment');
-var secret = 'clave_secreta_notas_app';
+/* REQUIRES */
+var jwt = require("jwt-simple");
+var moment = require("moment");
+var secret = process.env.JWT_SECRET;
 
-exports.createToken = function(user){
-    var payload = {
-        sub: user._id,
-        name: user.name,
-        email: user.email, /*
-        role: user.role,
-        image: user.image */
-        iat: moment().unix(),
-        exp: moment().add(30, 'days').unix
-    }
+exports.createToken = function (user) {
+  var payload = {
+    sub: user._id,
+    name: user.name,
+    email: user.email,
+    iat: moment().unix(),
+    exp: moment().add(30, "days").unix,
+  };
 
-    return jwt.encode(payload, secret);
+  return jwt.encode(payload, secret);
 };
