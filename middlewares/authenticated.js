@@ -5,6 +5,7 @@ var moment = require("moment");
 var secret = process.env.JWT_SECRET;
 
 exports.ensureAuth = function (req, res, next) {
+  console.log(req.headers);
   if (!req.headers.authorization) {
     return res
       .status(403)

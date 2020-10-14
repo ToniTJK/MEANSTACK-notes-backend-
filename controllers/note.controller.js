@@ -14,14 +14,14 @@ function getNotes(req, res) {
 
   Note.find({ user: userId }).exec((err, notes) => {
     if (err) {
-      res.status(500).send({ mssg: "Error en la petición." });
+      res.status(500).send({ mssg: "Server error." });
     } else {
       if (notes) {
-        res.status(500).send({
+        res.status(200).send({
           notes: notes,
         });
       } else {
-        res.status(404).send({ mssg: "No se encuentras notas." });
+        res.status(404).send({ mssg: "Notes not found." });
       }
     }
   });
@@ -37,22 +37,23 @@ function createNote(req, res) {
     note.title = params.title;
     note.description = params.description;
     note.user = req.user.sub;
+    note.createdAt = moment().format();
 
     note.save((err, noteStored) => {
       if (err) {
-        res.status(500).send({ mssg: "Error en la petición del servidor." });
+        res.status(500).send({ mssg: "Server error." });
       } else {
         if (!noteStored) {
-          res.status(500).send({ mssg: "No se ha guardado la nota." });
+          res.status(500).send({ mssg: "The note could not be saved." });
         } else {
           res
             .status(200)
-            .send({ mssg: "Se ha guardado correctamente.", note: noteStored });
+            .send({ mssg: "The note has been saved correctly.", note: noteStored });
         }
       }
     });
   } else {
-    res.status(404).send({ mssg: "Todos los campos són obligatorios." });
+    res.status(404).send({ mssg: "All fields are required." });
   }
 }
 
@@ -61,15 +62,14 @@ function deleteNote(req, res) {
 
   Note.findByIdAndDelete(noteId, (err, noteDelete) => {
     if (err) {
-      res.status(500).send({ mssg: "Error en la petición." });
+      res.status(500).send({ mssg: "Server error." });
     } else {
       if (noteDelete) {
-        res.status(500).send({
-          mssg: "Nota borrada correctamente.",
-          noteDelete: noteDelete,
+        res.status(200).send({
+          mssg: "The note has been removed corretly.",
         });
       } else {
-        res.status(500).send({ mssg: "No se ha podido eliminar la nota." });
+        res.status(500).send({ mssg: "The note could not be removed." });
       }
     }
   });
@@ -85,23 +85,41 @@ function updateNote(req, res) {
     { new: true },
     (err, noteUpdated) => {
       if (err) {
-        res.status(500).send({ mssg: "Error en la petición." });
+        res.status(500).send({ mssg: "Server error." });
       } else {
         if (noteUpdated) {
-          res.status(500).send({
-            mssg: "Nota actualizada correctamente.",
+          res.status(200).send({
+            mssg: "The note has been updated correctly.",
             noteUpdated: noteUpdated,
           });
         } else {
-          res.status(500).send({ mssg: "No se ha podido eliminar la nota." });
+          res.status(500).send({ mssg: "The note could not be updated." });
         }
       }
     }
   );
 }
 
+function getNoteById(req, res) {
+  var noteId = req.params.id;
+  Note.findOne({ _id: noteId }, (err, note) => {
+    if (err) {
+      res.status(500).send({ mssg: "Server error." });
+    } else {
+      if (note) {
+        res.status(200).send({
+          note: note,
+        });
+      } else {
+        res.status(404).send({ mssg: "Could not find the note." });
+      }
+    }
+  });
+}
+
 module.exports = {
   getNotes,
+  getNoteById,
   createNote,
   updateNote,
   deleteNote,

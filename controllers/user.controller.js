@@ -11,21 +11,12 @@ var User = require("./../models/user.model");
 var jwt = require("./../services/jwt");
 
 /* ACTIONS */
-function pruebas(req, res) {
-  res.status(200).send({
-    mssg: "Probando el controllador de usuarios y la acción pruebas.",
-    user: req.user,
-  });
-}
-
 function saveUser(req, res) {
   /* Create object */
   var user = new User();
 
   /* Body-Parser */
   var params = req.body;
-
-  console.log(params);
 
   /* Asignar valores al objeto */
 
@@ -36,7 +27,7 @@ function saveUser(req, res) {
 
     User.findOne({ email: user.email.toLowerCase() }, (err, userRegistred) => {
       if (err) {
-        res.status(500).send({ mssg: "Error al comprobar usuario." });
+        res.status(500).send({ mssg: "Server error." });
       } else {
         /* Si no existe usuario entonces lo registramos */
         if (!userRegistred) {
@@ -46,15 +37,15 @@ function saveUser(req, res) {
             /* Save in MongoDB */
             user.save((err, userStored) => {
               if (err) {
-                res.status(500).send({ mssg: "Error al guardar." });
+                res.status(500).send({ mssg: "Error in BBDD." });
               } else {
                 if (!userStored)
                   res
                     .status(404)
-                    .send({ mssg: "No se ha registrado el usuario." });
+                    .send({ mssg: "User not registred." });
                 else {
                   res.status(200).send({
-                    mssg: "Usuario registrado correctamente.",
+                    mssg: "Successfully registered user.",
                     user: userStored,
                   });
                 }
@@ -62,14 +53,14 @@ function saveUser(req, res) {
             });
           });
         } else {
-          res.status(500).send({ mssg: "Usuario ya existe." });
+          res.status(500).send({ mssg: "User already exist." });
         }
       }
     });
   } else {
     /* if check params */
     res.status(500).send({
-      mssg: "Introduce los datos correctamente.",
+      mssg: "Enter the data correctly.",
     });
   }
 }
@@ -82,12 +73,12 @@ function login(req, res) {
   User.findOne({ email: email.toLowerCase() }, (err, issetUser) => {
     /* Error del Servidor */
     if (err) {
-      res.status(500).send({ mssg: "Error al buscar usuario." });
+      res.status(500).send({ mssg: "Server error." });
     } else {
       /* Si la sentencia se ejecuta correctamente */
       /* Si no encuentra usuario */
       if (!issetUser) {
-        res.status(500).send({ mssg: "No se ha encontrado usuario." });
+        res.status(500).send({ mssg: "User not found." });
       } else {
         /* En el caso de que encuentre via email, comprobamos password */
         bcrypt.compare(password, issetUser.password, (err, status) => {
@@ -106,14 +97,9 @@ function login(req, res) {
                 user: issetUser,
               });
             }
-            /*             res.status(200).send({
-              mssg: "Email y contraseña válido.",
-              status: status,
-              user: issetUser,
-            }); */
           } else {
             res.status(500).send({
-              mssg: "El email o contraseña no coincide.",
+              mssg: "Wrong email or password.",
               status: status,
             });
           }
@@ -123,61 +109,7 @@ function login(req, res) {
   });
 }
 
-function updateUser(req, res) {
-  var userId = req.params.id;
-  var update = req.body;
-
-  if (userId != req.user.sub) {
-    res
-      .status(500)
-      .send({ mssg: "No tienes permiso para actualizar el usuario." });
-  }
-
-  User.findByIdAndUpdate(userId, update, { new: true }, (err, userUpdated) => {
-    if (err) {
-      res.status(500).send({ mssg: "Error al actualizar usuario." });
-    } else {
-      if (userUpdated) {
-        res.status(200).send({
-          mssg: "El usuario ha sido actualizado correctamente.",
-          userUpdated: userUpdated,
-        });
-      } else {
-        res.status(404).send({ mssg: "No se ha podido actualizar el usuario" });
-      }
-    }
-  });
-}
-
-function deleteUser(req, res) {
-  var userId = req.params.id;
-
-  if (userId != req.user.sub) {
-    res
-      .status(500)
-      .send({ mssg: "No tienes permiso para actualizar el usuario." });
-  }
-
-  User.findByIdAndDelete(userId, (err, userDeleted) => {
-    if (err) {
-      res.status(500).send({ mssg: "Error en la petición." });
-    } else {
-      if (userDeleted) {
-        res.status(500).send({
-          mssg: "Usuario eliminado correctamente.",
-          userDeleted: userDeleted,
-        });
-      } else {
-        res.status(500).send({ mssg: "No se ha podido eliminar el usuario." });
-      }
-    }
-  });
-}
-
 module.exports = {
-  pruebas,
   saveUser,
   login,
-  updateUser,
-  deleteUser,
 };
