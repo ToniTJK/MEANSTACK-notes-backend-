@@ -15,10 +15,10 @@ mongoose.connect(
   (err, res) => {
     if (err) throw err;
     else {
-      console.log("La conexión con mongoose ha sido realizada correctamente.");
+      console.log("Mongoose connected correctly.");
 
       app.listen(port, () => {
-        console.log("El servidor local con node y express esta ON.");
+        console.log("Node and Express ON.");
       });
     }
   }
