@@ -9,7 +9,6 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-* [License](#license)
 * [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
@@ -21,7 +20,7 @@ My first backend API with NodeJS and MongoDB.
 
 * [NodeJS](https://nodejs.org/en/)
 * [Express](http://expressjs.com/)
-* [Bcrypt and JWT](https://jwt.io/)
+* [JWT](https://jwt.io/)
 * [MongoDB](https://www.mongodb.com/)
 
 <!-- GETTING STARTED -->
@@ -49,7 +48,7 @@ git clone https://github.com/ToniTJK/noteWeb-frontend.git
 npm install
 ```
 
-3. Enter ENV varibles in .env `services/global.ts`
+3. Create ENV varibles in `.env`
 ```JS
 DB_URL_ON=mongodb+srv:<MONGOOSE URL>
 JWT_SECRET=<YOUR PWD>
@@ -67,9 +66,9 @@ Email: [tonitorres.dev@gmail.com](tonitorres.dev@gmail.com)
 
 My website: [https://tonitorrescuenca.com](https://tonitorrescuenca.com)
 
-Project Link: [https://github.com/ToniTJK/noteWeb-backend](https://github.com/ToniTJK/noteWeb-backend)
+Project Link Backend: [https://github.com/ToniTJK/noteWeb-backend](https://github.com/ToniTJK/noteWeb-backend)
 
-Project Link: [https://github.com/ToniTJK/noteWeb-frontend](https://github.com/ToniTJK/noteWeb-frontend)
+Project Link Frontend: [https://github.com/ToniTJK/noteWeb-frontend](https://github.com/ToniTJK/noteWeb-frontend)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
